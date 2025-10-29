@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  trendradar-mcp:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.mcp
+    container_name: trendradar-mcp-server
+    restart: unless-stopped
+    
+    ports:
+      - "3333:3333"  # MCP Server HTTP 端口
+    
+    volumes:
+      # 挂载配置文件（只读）
+      - ../config:/app/config:ro
+      # 挂载输出目录（用于存储爬取的数据）
+      - ../output:/app/output
+    
+    environment:
+      - TZ=Asia/Shanghai
+      - PYTHONUNBUFFERED=1
+      - CONFIG_PATH=/app/config/config.yaml
+      - FREQUENCY_WORDS_PATH=/app/config/frequency_words.txt
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:3333/mcp', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    # 日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    networks:
+      - trendradar-network
+
+networks:
+  trendradar-network:
+    driver: bridge
+
