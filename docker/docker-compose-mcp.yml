@@ -1,4 +1,4 @@
-version: '3.8'
+name: trendradar
 
 services:
   trendradar-mcp:
@@ -39,10 +39,10 @@ services:
         max-file: "3"
     
     networks:
-      - trendradar-network
+      - qnap-eldenring
 
 networks:
-  trendradar-network:
-    driver: bridge
+  qnap-eldenring:
+    external: true
 
 

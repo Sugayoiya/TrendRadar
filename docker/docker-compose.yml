@@ -1,3 +1,5 @@
+name: trendradar
+
 services:
   trend-radar:
     image: wantcat/trendradar:latest
