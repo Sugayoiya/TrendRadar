@@ -23,9 +23,9 @@ services:
       - CONFIG_PATH=/app/config/config.yaml
       - FREQUENCY_WORDS_PATH=/app/config/frequency_words.txt
     
-    # 健康检查
+    # 健康检查 - 使用简单的 TCP 端口检查
     healthcheck:
-      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:3333/mcp', timeout=5)"]
+      test: ["CMD", "python", "-c", "import socket; s = socket.socket(); s.settimeout(5); s.connect(('localhost', 3333)); s.close()"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -44,4 +44,5 @@ services:
 networks:
   trendradar-network:
     driver: bridge
+
 
